@@ -5,8 +5,14 @@ using SocketIO;
 
 public class NetworkManager : MonoBehaviour
 {
+	[Header("Wall Settings")]
+	public GameObject wallPrefab;
+	public Vector3 wallSpawnPoint = new Vector3(-2.32f, -2.387f, 19.47f);
+
+	[Header("Other")]
 	public Player LocalPlayer;
 	public LaneController FUCKINGOODJOBMATIAS;
+
 	private SocketIOComponent socket;
 
 	public int playerId;
@@ -35,6 +41,8 @@ public class NetworkManager : MonoBehaviour
 		socket.On ("matchfound", OnMatchFound);
 		socket.On ("init", OnInit); 
 		socket.On ("timeout", OnTimeOut);
+		socket.On ("wall", OnWall);
+		
 
 	
 	}
@@ -42,6 +50,17 @@ public class NetworkManager : MonoBehaviour
 	void Update ()
 	{
 		
+	}
+
+	void OnWall(SocketIOEvent obj)
+	{
+		int wallNumber = int.Parse(obj.data["wall"].str);
+		GameObject wall = Instantiate(wallPrefab, wallSpawnPoint, Quaternion.identity) as GameObject;
+		bool ok = wall.GetComponent<WallController>().setNewWall(wallNumber);
+		if(!ok) {
+			Destroy(wall);
+			Debug.LogError("Something went wrong with the wall spawning... Got wall number: " + wallNumber + " (" + obj.data["wall"].str + ")");
+		}
 	}
 
 	void OnMoved (SocketIOEvent obj)
