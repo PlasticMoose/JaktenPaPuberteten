@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StuffSpawner : MonoBehaviour {
-	public float lifetime = 120f;
+	public float lifetime = 30f;
 	public float interval = 1f;
 	public GameObject[] stuff;
 
