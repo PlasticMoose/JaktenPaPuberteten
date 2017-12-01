@@ -14,11 +14,15 @@ public class PlayerController : MonoBehaviour
 	public bool RemotePlayer;
 
 	public GameObject[] models;
+	public Animator[] animators;
 	public Image indicator;
+
+	private AnimationController animationController;
 
 	// Use this for initialization
 	void Start ()
 	{
+		animationController = GetComponent<AnimationController>();
 		thisPlayer = GetComponent<Player> ();
 		laneController = FindObjectOfType<LaneController> ();
 		socket = FindObjectOfType<SocketIOComponent> ();
@@ -43,6 +47,8 @@ public class PlayerController : MonoBehaviour
 	{
 		models[0].SetActive(thisPlayer.playerID == 0);
 		models[1].SetActive(thisPlayer.playerID == 1);
+		if(animationController != null)
+			animationController.anim = animators[thisPlayer.playerID];
 
 		if(indicator != null)
 			indicator.color = thisPlayer.playerID == 1 ? Color.red : Color.blue;
