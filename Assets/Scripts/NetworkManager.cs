@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using SocketIO;
 
 public class NetworkManager : MonoBehaviour
@@ -23,6 +24,8 @@ public class NetworkManager : MonoBehaviour
 	{
 		EventManager.instance.StartListening ("SearchForGame", QueForMatch);
 		EventManager.instance.StartListening ("AbortMM", AbortMM);
+		EventManager.instance.StartListening ("MatchLost", EndGame);
+		EventManager.instance.StartListening ("MatchWon", EndGame);
 	}
 
 	void OnDestroy ()
@@ -31,13 +34,36 @@ public class NetworkManager : MonoBehaviour
 		{
 			EventManager.instance.StopListening ("SearchForGame", QueForMatch);
 			EventManager.instance.StopListening ("AbortMM", AbortMM);
+			EventManager.instance.StopListening ("MatchLost", EndGame);
+			EventManager.instance.StopListening ("MatchWon", EndGame);
 		}
+		socket.Off ("moved", OnMoved);
+		socket.Off ("matchfound", OnMatchFound);
+		socket.Off ("init", OnInit); 
+		socket.Off ("timeout", OnTimeOut);
+		socket.Off ("wall", OnWall);
+		socket.Off ("stopped", OnStopped);
+		socket.Off ("timeout", OnTimeout);
+	}
+
+	void EndGame() {
+		socket.Close();
+		StartCoroutine(Reconnect());
+	}
+
+	IEnumerator Reconnect() {
+		yield return new WaitForSeconds(4f);
+		socket.Connect();
 	}
 
 	void Start ()
 	{
 		#if UNITY_STANDALONE
-		Screen.SetResolution(720, 1280, false, 60);
+		Screen.SetResolution(480, 853, false, 60);
+		#elif UNITY_IOS
+		Screen.orientation = ScreenOrientation.Portrait;
+		#elif UNITY_ANDROID
+		Screen.orientation = ScreenOrientation.Portrait;
 		#endif
 		socket = GetComponent <SocketIOComponent> ();
 		socket.On ("moved", OnMoved);
@@ -45,7 +71,8 @@ public class NetworkManager : MonoBehaviour
 		socket.On ("init", OnInit); 
 		socket.On ("timeout", OnTimeOut);
 		socket.On ("wall", OnWall);
-		
+		socket.On ("stopped", OnStopped);
+		socket.On ("timeout", OnTimeout);
 
 	
 	}
@@ -55,10 +82,25 @@ public class NetworkManager : MonoBehaviour
 		
 	}
 
+	void OnStopped(SocketIOEvent obj) {
+		EventManager.instance.TriggerEvent("MatchWon");
+	}
+
+	void OnTimeout(SocketIOEvent obj) {
+		EventManager.instance.TriggerEvent("Menu");
+	}
+
 	void OnWall(SocketIOEvent obj)
 	{
 		//int wallNumber = int.Parse(obj.data["wall"].str);
 		GameObject wall = Instantiate(wallPrefab, wallSpawnPoint, Quaternion.identity) as GameObject;
+		Scene gameScene = SceneManager.GetSceneByBuildIndex(2);
+		if(gameScene.isLoaded) {
+			SceneManager.MoveGameObjectToScene(wall, gameScene);
+		} else {
+			Destroy(wall);
+			return;
+		}
 		WallClass gotWall = new WallClass();
 		gotWall = JsonUtility.FromJson<WallClass>(obj.data.ToString());
 		wall.GetComponent<WallController>().setNewWall(int.Parse(gotWall.lanes[0]), int.Parse(gotWall.lanes[1]), int.Parse(gotWall.lanes[2]), int.Parse(gotWall.lanes[3]), gotWall.hash, socket);
@@ -84,7 +126,7 @@ public class NetworkManager : MonoBehaviour
 		lobbyId = lobbyID;
 		mapSeed = mapseed;
 
-		Debug.Log ("MatchFound");
+		//Debug.Log ("MatchFound");
 
 		EventManager.instance.TriggerEvent ("MatchFound");
 	}

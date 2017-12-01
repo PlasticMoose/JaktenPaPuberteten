@@ -19,6 +19,13 @@ public class PlayerController : MonoBehaviour
 
 	private AnimationController animationController;
 
+	void OnDestroy ()
+	{
+		socket.Off ("initpos", laneController.MovePlayer);
+		socket.Off ("posed", OnPosed);
+		socket.Off ("hit", OnHit);
+	}
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -75,18 +82,27 @@ public class PlayerController : MonoBehaviour
 
 	private bool swiping, eventSent;
 	private Vector2 lastPosition;
+	private float lastTap = 0f;
 
 	void Touch() {
 		if (Input.touchCount == 0) 
-             return;
- 
-         if (Input.GetTouch(0).deltaPosition.sqrMagnitude != 0){
-             if (swiping == false){
-                 swiping = true;
-                 lastPosition = Input.GetTouch(0).position;
-                 return;
-             } else {
-                 if (!eventSent) {
+            return;
+
+		if(Time.time - lastTap <= .3f && Input.touchCount == 1) {
+			if(Input.GetTouch(0).position.x < Screen.width / 2f) {
+				DoubleJump(-2);
+			} else {
+				DoubleJump(2);
+			}
+		}
+
+        if (Input.GetTouch(0).deltaPosition.sqrMagnitude != 0){
+            if (swiping == false){
+                swiping = true;
+                lastPosition = Input.GetTouch(0).position;
+                return;
+            } else {
+                if (!eventSent) {
                     Vector2 direction = Input.GetTouch(0).position - lastPosition;
  
                     if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)){
@@ -94,12 +110,12 @@ public class PlayerController : MonoBehaviour
                             Jump (1);
                         else
                             Jump (-1);
-                    } else {
+					} /*else {
                         if (direction.y > 0)
                             DoubleJump(2);
                         else
                             DoubleJump(-2);
-                    }
+                    }*/
  
                     eventSent = true;
                  }
@@ -118,7 +134,19 @@ public class PlayerController : MonoBehaviour
 
 	void OnHit(SocketIOEvent obj) {
 		if(!RemotePlayer) {
-			Debug.Log(obj.data);
+			int who = int.Parse(obj.data["who"].str);
+			int hits = int.Parse(obj.data["hit"].str);
+			if(who == thisPlayer.playerID) {
+				EventManager.instance.TriggerEvent("MeHit");
+				if(hits >= 3) {
+					EventManager.instance.TriggerEvent("MatchLost");
+				}
+			} else {
+				EventManager.instance.TriggerEvent("OtherHit");
+				if(hits >= 3) {
+					EventManager.instance.TriggerEvent("MatchWon");
+				}
+			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StuffSpawner : MonoBehaviour {
 	public float lifetime = 12f;
@@ -25,6 +26,13 @@ public class StuffSpawner : MonoBehaviour {
 			Vector3 rndPosWithin = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
             rndPosWithin = transform.TransformPoint(rndPosWithin * .5f);
 			GameObject ting = Instantiate(stuff[index], rndPosWithin, transform.rotation) as GameObject;
+			Scene gameScene = SceneManager.GetSceneByBuildIndex(2);
+			if(gameScene.isLoaded) {
+				SceneManager.MoveGameObjectToScene(ting, gameScene);
+			} else {
+				Destroy(ting);
+				return;
+			}
 			ting.AddComponent<Movement>();
 			Destroy(ting, lifetime);
 			lastUpdate = Time.time;
