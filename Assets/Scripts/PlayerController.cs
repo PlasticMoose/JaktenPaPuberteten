@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 	float cooldownTime = 0.5f;
 	public bool RemotePlayer;
 
+	public GameObject[] models;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -37,6 +39,8 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		models[0].SetActive(thisPlayer.playerID == 0);
+		models[1].SetActive(thisPlayer.playerID == 1);
 		timer += Time.deltaTime;
 		if (Input.GetKeyDown (KeyCode.A))
 			Jump (-1);
