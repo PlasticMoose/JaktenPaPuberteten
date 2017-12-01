@@ -5,7 +5,6 @@ using SocketIO;
 
 public class WallController : MonoBehaviour {
 	public float life = 120f;
-	public float speed = 5f;
 
 	public SocketIOComponent socket;
 
@@ -29,11 +28,6 @@ public class WallController : MonoBehaviour {
 		for(int i = 0; i < lanes[3].transform.childCount; i++) {
 			lanes[3].transform.GetChild(i).gameObject.SetActive(i == w4);
 		}
-	}
-	
-	private void Update() {
-		float step = speed * Time.deltaTime;
-		transform.Translate(new Vector3(0f, 0f, -1f) * step);
 	}
 
 	void OnTriggerEnter(Collider coll) {
