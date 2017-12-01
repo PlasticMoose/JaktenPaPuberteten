@@ -74,19 +74,6 @@ public class LaneController : MonoBehaviour
 	//translates a posId to a 1D position
 	float PosIdToPos (int posId)
 	{
-		if (posId == 0)
-		{
-			return -2f;
-		} else if (posId == 1)
-		{
-			return -0.65f;
-		} else if (posId == 2)
-		{
-			return 0.65f;
-		} else if (posId == 3)
-		{
-			return 2f;
-		} else
-			return -5;
+		return lanes[posId].lanePos;
 	}
 }

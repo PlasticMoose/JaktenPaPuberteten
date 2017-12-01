@@ -251,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 1479408793043322, guid: 6937cd62259eb114893682c072603aac, type: 2}
-  wallSpawnPoint: {x: -2.32, y: -2.387, z: 19.47}
+  wallSpawnPoint: {x: 0, y: 0, z: 200}
   LocalPlayer: {fileID: 0}
   FUCKINGOODJOBMATIAS: {fileID: 0}
   playerId: 0
