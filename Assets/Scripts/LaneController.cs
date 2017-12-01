@@ -60,8 +60,6 @@ public class LaneController : MonoBehaviour
 
 	public void MovePlayer (SocketIOEvent obj)
 	{	
-		Debug.Log (obj.data);
-		
 		int posID = int.Parse (obj.data ["pos"].str);
 		int playerID = int.Parse (obj.data ["who"].str);
 
