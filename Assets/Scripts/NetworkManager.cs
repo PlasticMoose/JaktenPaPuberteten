@@ -36,6 +36,9 @@ public class NetworkManager : MonoBehaviour
 
 	void Start ()
 	{
+		#if UNITY_STANDALONE
+		Screen.SetResolution(720, 1280, false, 60);
+		#endif
 		socket = GetComponent <SocketIOComponent> ();
 		socket.On ("moved", OnMoved);
 		socket.On ("matchfound", OnMatchFound);

@@ -979,7 +979,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 6b64a73f95987b642946ffbe8e5d2a1b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 701760fcc5f766047951ea0f414c39c3, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dce72e4276f6dc439dc033f9d39c84b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 120
+  lifetime: 15
   interval: 1
   stuff:
   - {fileID: 1688282352756256, guid: ae7eeb0c9dcf808489b724b988247ccf, type: 2}
@@ -1904,7 +1904,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 6d49e76a2ad519c438fa2af8298b18a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e845f226358b7540b6a40daa24965f1, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2374,7 +2374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dce72e4276f6dc439dc033f9d39c84b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 120
+  lifetime: 15
   interval: 1
   stuff:
   - {fileID: 1688282352756256, guid: ae7eeb0c9dcf808489b724b988247ccf, type: 2}
@@ -3261,6 +3261,11 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400054, guid: 3bab2da1c3affb149b933100f51c093f, type: 3}
   m_PrefabInternal: {fileID: 1169039862}
+--- !u!95 &1169039864 stripped
+Animator:
+  m_PrefabParentObject: {fileID: 9500000, guid: 3bab2da1c3affb149b933100f51c093f,
+    type: 3}
+  m_PrefabInternal: {fileID: 1169039862}
 --- !u!1 &1179564766
 GameObject:
   m_ObjectHideFlags: 0
@@ -3549,6 +3554,7 @@ GameObject:
   - component: {fileID: 1386998636}
   - component: {fileID: 1386998635}
   - component: {fileID: 1386998634}
+  - component: {fileID: 1386998637}
   m_Layer: 0
   m_Name: RemotePlayer
   m_TagString: Untagged
@@ -3588,7 +3594,9 @@ MonoBehaviour:
   models:
   - {fileID: 1491551965}
   - {fileID: 943278196}
-  animators: []
+  animators:
+  - {fileID: 1169039864}
+  - {fileID: 943278198}
   indicator: {fileID: 0}
 --- !u!4 &1386998636
 Transform:
@@ -3606,6 +3614,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1386998637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1386998633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3497ee076eaa8439dfeb1637b494ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 0}
 --- !u!1 &1393256448
 GameObject:
   m_ObjectHideFlags: 0

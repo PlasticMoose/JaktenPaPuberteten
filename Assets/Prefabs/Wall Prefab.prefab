@@ -3433,7 +3433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f969af91329ce2f4c830ea74e285c1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 120
+  life: 20
   socket: {fileID: 0}
   hash: 
   lanes:

@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
 		laneController = FindObjectOfType<LaneController> ();
 		socket = FindObjectOfType<SocketIOComponent> ();
 		socket.On ("initpos", laneController.MovePlayer);
+		socket.On ("posed", OnPosed);
+		socket.On ("hit", OnHit);
 
 		if (!RemotePlayer)
 		{
@@ -54,6 +56,11 @@ public class PlayerController : MonoBehaviour
 			indicator.color = thisPlayer.playerID == 1 ? Color.red : Color.blue;
 		
 		timer += Time.deltaTime;
+		#if UNITY_IOS
+			Touch();
+		#elif UNITY_ANDROID
+			Touch();
+		#elif UNITY_STANDALONE
 		if (Input.GetKeyDown (KeyCode.A))
 			Jump (-1);
 		else if (Input.GetKeyDown (KeyCode.D))
@@ -63,6 +70,56 @@ public class PlayerController : MonoBehaviour
 			DoubleJump (-2);
 		else if (Input.GetKeyDown (KeyCode.E))
 			DoubleJump (2);
+		#endif
+	}
+
+	private bool swiping, eventSent;
+	private Vector2 lastPosition;
+
+	void Touch() {
+		if (Input.touchCount == 0) 
+             return;
+ 
+         if (Input.GetTouch(0).deltaPosition.sqrMagnitude != 0){
+             if (swiping == false){
+                 swiping = true;
+                 lastPosition = Input.GetTouch(0).position;
+                 return;
+             } else {
+                 if (!eventSent) {
+                    Vector2 direction = Input.GetTouch(0).position - lastPosition;
+ 
+                    if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y)){
+                        if (direction.x > 0) 
+                            Jump (1);
+                        else
+                            Jump (-1);
+                    } else {
+                        if (direction.y > 0)
+                            DoubleJump(2);
+                        else
+                            DoubleJump(-2);
+                    }
+ 
+                    eventSent = true;
+                 }
+             }
+         } else {
+             swiping = false;
+             eventSent = false;
+         }
+	}
+
+	void OnPosed(SocketIOEvent obj) {
+		if(RemotePlayer) {
+			animationController.ChangeRemotePose(int.Parse(obj.data["pose"].str) + 1);
+		}
+	}
+
+	void OnHit(SocketIOEvent obj) {
+		if(!RemotePlayer) {
+			Debug.Log(obj.data);
+		}
 	}
 
 	//makes the player jump two lanes in the given direction

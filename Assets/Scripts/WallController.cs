@@ -4,7 +4,7 @@ using UnityEngine;
 using SocketIO;
 
 public class WallController : MonoBehaviour {
-	public float life = 120f;
+	public float life = 12f;
 
 	public SocketIOComponent socket;
 
