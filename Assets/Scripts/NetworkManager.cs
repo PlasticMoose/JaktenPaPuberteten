@@ -54,13 +54,12 @@ public class NetworkManager : MonoBehaviour
 
 	void OnWall(SocketIOEvent obj)
 	{
-		int wallNumber = int.Parse(obj.data["wall"].str);
+		//int wallNumber = int.Parse(obj.data["wall"].str);
 		GameObject wall = Instantiate(wallPrefab, wallSpawnPoint, Quaternion.identity) as GameObject;
-		bool ok = wall.GetComponent<WallController>().setNewWall(wallNumber);
-		if(!ok) {
-			Destroy(wall);
-			Debug.LogError("Something went wrong with the wall spawning... Got wall number: " + wallNumber + " (" + obj.data["wall"].str + ")");
-		}
+		WallClass gotWall = new WallClass();
+		gotWall = JsonUtility.FromJson<WallClass>(obj.data.ToString());
+		Debug.Log(gotWall.lanes[0] + ", " + gotWall.lanes[1] + ", " +gotWall.lanes[2] + ", " + gotWall.lanes[3]);
+		wall.GetComponent<WallController>().setNewWall(int.Parse(gotWall.lanes[0]), int.Parse(gotWall.lanes[1]), int.Parse(gotWall.lanes[2]), int.Parse(gotWall.lanes[3]), gotWall.hash);
 	}
 
 	void OnMoved (SocketIOEvent obj)
@@ -108,5 +107,13 @@ public class NetworkManager : MonoBehaviour
 	{
 		socket.Emit ("matchmake");
 
+	}
+
+	public class WallClass {
+		public string hash;
+		public string[] lanes;
+		public WallClass() {
+			lanes = new string[4];
+		}
 	}
 }

@@ -5,21 +5,25 @@ using UnityEngine;
 public class WallController : MonoBehaviour {
 	public float speed = 5f;
 
-	private int currentWall = 0;
+	public string hash = "";
 
-	public bool setNewWall(int wall) {
-		if(wall >= 0 && wall < transform.childCount) {
-			currentWall = wall;
-			updateChildren();
-			return true;
+	public GameObject[] lanes;
+	
+	public void setNewWall(int w1, int w2, int w3, int w4, string _hash) {
+		Destroy(gameObject, 60f);
+		for(int i = 0; i < lanes[0].transform.childCount; i++) {
+			lanes[0].transform.GetChild(i).gameObject.SetActive(i == w1);
 		}
-		return false;
-	}
-
-	private void updateChildren() {
-		for(int i = 0; i < transform.childCount; i++) {
-			transform.GetChild(i).gameObject.SetActive(i == currentWall);
+		for(int i = 0; i < lanes[1].transform.childCount; i++) {
+			lanes[1].transform.GetChild(i).gameObject.SetActive(i == w2);
 		}
+		for(int i = 0; i < lanes[2].transform.childCount; i++) {
+			lanes[2].transform.GetChild(i).gameObject.SetActive(i == w3);
+		}
+		for(int i = 0; i < lanes[3].transform.childCount; i++) {
+			lanes[3].transform.GetChild(i).gameObject.SetActive(i == w4);
+		}
+		hash = _hash;
 	}
 	
 	private void Update() {

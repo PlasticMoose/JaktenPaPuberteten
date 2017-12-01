@@ -56,13 +56,7 @@ public class PlayerController : MonoBehaviour
 		if (timer >= cooldownTime)
 		{
 			//send a json package to the server for evaluation
-			JSONObject json = new JSONObject ();
-
-			json.AddField ("lobbyid", thisPlayer.matchID);
-			json.AddField ("direction", dir);
-
-			socket.Emit ("move", json);
-
+			Jump(dir);
 			timer = 0;
 		}
 	}
