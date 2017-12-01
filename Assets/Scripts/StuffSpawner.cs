@@ -10,7 +10,10 @@ public class StuffSpawner : MonoBehaviour {
 	private float lastUpdate = 0f;
 
 	public void Awake() {
-		//Random.InitState(GameObject.FindObjectOfType<NetworkManager>().lobbyId.GetHashCode());
+		NetworkManager nm = GameObject.FindObjectOfType<NetworkManager>();
+		if(nm != null) {
+			Random.InitState(nm.lobbyId.GetHashCode());
+		}
 		lastUpdate = Time.time;
 	}
 	
