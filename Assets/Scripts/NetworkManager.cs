@@ -58,7 +58,6 @@ public class NetworkManager : MonoBehaviour
 		GameObject wall = Instantiate(wallPrefab, wallSpawnPoint, Quaternion.identity) as GameObject;
 		WallClass gotWall = new WallClass();
 		gotWall = JsonUtility.FromJson<WallClass>(obj.data.ToString());
-		Debug.Log(gotWall.lanes[0] + ", " + gotWall.lanes[1] + ", " +gotWall.lanes[2] + ", " + gotWall.lanes[3]);
 		wall.GetComponent<WallController>().setNewWall(int.Parse(gotWall.lanes[0]), int.Parse(gotWall.lanes[1]), int.Parse(gotWall.lanes[2]), int.Parse(gotWall.lanes[3]), gotWall.hash, socket);
 	}
 
