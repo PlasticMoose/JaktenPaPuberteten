@@ -1,56 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SocketIO;
 
 public class AnimationController : MonoBehaviour {
 
-	Animator anim;
-	float timer;
+	public Animator anim;
+	private SocketIOComponent socket;
+	private Player player;
 
-	// Use this for initialization
-	void Start () {
-		anim = GameObject.FindWithTag ("Player").GetComponent<Animator>();
+	//PoseInt 0 = running, PoseInt > 1-4 = Poses
+
+	void Start ()
+	{
+		socket = GameObject.FindObjectOfType<SocketIOComponent> ();
+		player = GetComponent<Player> ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		print (timer);
-		timer += Time.deltaTime;
-		
-		if (Input.GetKey (KeyCode.Alpha1) && timer > 2.5f) 
-		{
-			anim.SetInteger ("PoseInt", 1);
-			print (1);
-			timer = 0;
-		}
 
-		if (Input.GetKey (KeyCode.Alpha2) && timer > 2.5f) 
-		{
-			anim.SetInteger ("PoseInt", 2);
-			print (2);
-			timer = 0;
-		}
+	public void ChangePose (int PoseInt)
+	{
+		SendPose (PoseInt);
+		anim.SetInteger ("PoseInt", PoseInt);
+	}
+	public void ChangeRemotePose (int PoseInt)
+	{
+		anim.SetInteger ("PoseInt", PoseInt);
+	}
 
+	void SendPose (int PoseInt)
+	{
+		JSONObject json = new JSONObject ();
+		json.AddField ("lobbyid", player.matchID);
+		json.AddField ("pose", PoseInt - 1);
 
-		if (Input.GetKey (KeyCode.Alpha3) && timer > 2.5f) 
-		{
-			anim.SetInteger ("PoseInt", 3);
-			print (3);
-			timer = 0;
-		}
-
-
-		if (Input.GetKey (KeyCode.Alpha4) && timer > 2.5f) 
-		{
-			anim.SetInteger ("PoseInt", 4);
-			print (4);
-			timer = 0;
-		}
-
-		if (timer > 2) 
-		{
-			anim.SetInteger ("PoseInt", 0);
-		}
+		socket.Emit ("pose", json);
 
 	}
+
 }
