@@ -1692,6 +1692,7 @@ MonoBehaviour:
   models:
   - {fileID: 1910681097}
   - {fileID: 925157301}
+  indicator: {fileID: 95781273}
 --- !u!4 &659529058
 Transform:
   m_ObjectHideFlags: 0
@@ -3584,6 +3585,7 @@ MonoBehaviour:
   models:
   - {fileID: 1491551965}
   - {fileID: 943278196}
+  indicator: {fileID: 0}
 --- !u!4 &1386998636
 Transform:
   m_ObjectHideFlags: 0
