@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
 			indicator.color = thisPlayer.playerID == 1 ? Color.red : Color.blue;
 		
 		timer += Time.deltaTime;
+		Touch();
 		#if UNITY_IOS
 			Touch();
 		#elif UNITY_ANDROID
@@ -83,20 +84,24 @@ public class PlayerController : MonoBehaviour
 	private bool swiping, eventSent;
 	private Vector2 lastPosition;
 	private float lastTap = 0f;
+	private float lastRelease = 0f;
 
 	void Touch() {
-		if (Input.touchCount == 0) 
+		if (Input.touchCount == 0) {
+			if(lastRelease == 0f)
+				lastRelease = Time.time - Time.deltaTime;
             return;
-
-		if(Time.time - lastTap <= .3f && Input.touchCount == 1) {
-			if(Input.GetTouch(0).position.x < Screen.width / 2f) {
+		}
+		
+		if((Time.time - lastTap) <= .3f && lastRelease != 0f && Input.touchCount == 1) {
+			if(Input.GetTouch(0).position.x < (Screen.width / 2f)) {
 				DoubleJump(-2);
 			} else {
 				DoubleJump(2);
 			}
 		}
 
-        if (Input.GetTouch(0).deltaPosition.sqrMagnitude != 0){
+        if (Input.GetTouch(0).deltaPosition.sqrMagnitude >= 100){
             if (swiping == false){
                 swiping = true;
                 lastPosition = Input.GetTouch(0).position;
@@ -117,13 +122,15 @@ public class PlayerController : MonoBehaviour
                             DoubleJump(-2);
                     }*/
  
-                    eventSent = true;
-                 }
-             }
-         } else {
-             swiping = false;
-             eventSent = false;
-         }
+                    eventSent = true; 
+				}
+            }
+        } else {
+            swiping = false;
+            eventSent = false;
+        }
+		lastRelease = 0f;
+		lastTap = Time.time;
 	}
 
 	void OnPosed(SocketIOEvent obj) {
