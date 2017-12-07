@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
 			indicator.color = thisPlayer.playerID == 1 ? Color.red : Color.blue;
 		
 		timer += Time.deltaTime;
-		Touch();
+
 		#if UNITY_IOS
 			Touch();
 		#elif UNITY_ANDROID
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-        if (Input.GetTouch(0).deltaPosition.sqrMagnitude >= 100){
+        if (Input.GetTouch(0).deltaPosition.sqrMagnitude >= 50){
             if (swiping == false){
                 swiping = true;
                 lastPosition = Input.GetTouch(0).position;
